@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+
+<div>
+    <!-- The form below should invoke the method ReservationsController.listAll -->
+    <form id="filter-form">
+        <label for="guestName">Guest Name</label>
+        <input id="guestName" type="text" name="guestName"/>
+        <label for="roomType">Genre</label>
+        <select id="roomType" name="roomType">
+            <option value="">All</option>
+            <option th:each="type : ${roomTypes}"
+                    th:value="${type}"
+                    th:text="${type.name()}"
+
+            >[roomType]
+
+            </option>
+        </select>
+
+        <option value="">All</option>
+            <!-- For each Hotel you should have one <option> like below  -->
+            <option th:each="hotel: ${hotels}" th:text="${hotel.name}" th:value="${hotel.id}"
+
+            >[hotel.name]</option>
+        </select>
+        <button id="filter" type="submit">Filter</button>
+    </form>
+    <div>
+        <!-- ReservationsController.showAdd -->
+        <a href="/reservations/add" class="add-item" sec:authorize="hasRole('ROLE_ADMIN')">
+            Add new reservation
+        </a>
+    </div>
+    <table>
+        <tr>
+            <th>Guest Name</th>
+            <th>Date of Creation</th>
+            <th>Room Type</th>
+            <th>Hotel</th>
+            <th>Days of Stay</th>
+            <th>Actions</th>
+        </tr>
+        <!-- For each reservation you should have one <tr> like below -->
+        <tr class="item" th:each="reservation : ${reservations}">
+            <td th:text="${reservation.guestName}">[reservation.guestName]</td>
+            <td th:text="${reservation.dateCreated}">[reservation.dateCreated]</td>
+            <td th:text="${reservation.roomType}">[reservation.roomType]</td>
+            <td th:text="${reservation.hotel.name}">[reservation.hotel.name]</td>
+            <td th:text="${reservation.daysOfStay}">[reservation.daysOfStay]</td>
+            <td>
+                <!-- ReservationsController.delete -->
+                <form method="post" th:action="@{'/reservations/delete/{id}' (id=${reservation.id})}" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <button type="submit" class="delete-item">Delete</button>
+                </form>
+                <!-- ReservationsController.showEdit -->
+                <a th:href="@{'/reservations/edit/{id}' (id=${reservation.id})}" class="edit-item" sec:authorize="hasRole('ROLE_ADMIN')">Edit</a>
+                <!-- ReservationsController.extend -->
+                <form th:method="post" th:action="@{/reservations/extend/{id}(id=${reservation.id})}" sec:authorize="hasRole('ROLE_USER')">
+                    <button type="submit" class="extend-item">Extend stay</button>
+                </form>
+            </td>
+        </tr>
+
+    </table>
+
+
+
+</div>
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+</body>
+</html>

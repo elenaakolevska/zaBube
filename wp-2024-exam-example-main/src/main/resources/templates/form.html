@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WP Exam</title>
+</head>
+<body>
+<!-- The form should submit to ReservationsController.create or ReservationsController.update,
+     depending on whether we are creating or editing a reservation -->
+<form method="POST" th:action="${reservation == null ? '/reservations' : '/reservations/' + reservation.id}">
+    <div>
+        <label for="guestName">Guest Name</label>
+        <input type="text"
+               id="guestName"
+               name="guestName"
+               required
+               th:value="${reservation?.guestName}">
+    </div>
+    <div>
+        <label for="dateCreated">Date of Creation</label>
+        <input type="date"
+               id="dateCreated"
+               name="dateCreated"
+               required
+               th:value="${reservation?.dateCreated}">
+    </div>
+    <div>
+        <label for="daysOfStay">Days of Stay</label>
+        <input type="number"
+               id="daysOfStay"
+               name="daysOfStay"
+               required
+               th:value="${reservation?.daysOfStay}">
+    </div>
+    <div>
+        <label for="roomType">Room Type</label><br/>
+        <select id="roomType" name="roomType" required>
+            <option value="">Select Room Type</option>
+            <option th:each="type : ${roomTypes}"
+                    th:value="${type}"
+                    th:text="${type.name()}"
+                    th:selected="${reservation?.roomType == type}"></option>
+        </select>
+    </div>
+    <div>
+        <label for="hotel">Hotel</label><br/>
+        <select id="hotel" name="hotelId" required>
+            <option value="">Select Hotel</option>
+            <option th:each="hotel : ${hotels}"
+                    th:value="${hotel.id}"
+                    th:text="${hotel.name}"
+                    th:selected="${reservation?.hotel?.id == hotel.id}"></option>
+        </select>
+    </div>
+
+    <button id="submit" type="submit">Submit</button>
+    <a id="back" href="/reservations" type="button" class="btn btn-primary">Back to reservations</a>
+</form>
+
+<div>
+    <ul id="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
+
+</body>
+</html>
